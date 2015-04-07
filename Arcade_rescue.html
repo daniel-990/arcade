@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+<head>
+<!--<meta name="viewport" content="width=device-width, height =device-height,initial-scale=100, maximum-scale=0.5, user-scalable=no">-->
+<meta name="viewport">
+<title>imagenes</title>
+<link href="css/pruebaJuego.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+    <script language="JavaScript" src="js/simple_m2d.js"></script>
+</head>
+    <script type="text/javascript">
+
+window.onload = function(){//function gloval;
+    
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var log = document.getElementById("log");
+    
+    var luna;
+    var xluna = canvas.width/5;
+    var yluna = canvas.height/28;
+
+    var fondo2;
+    var xfondo2 = canvas.width/1000;
+    var yfondo2 = 1;
+    
+    var personaje;
+    var framePersonaje = 0;
+    var xpersonaje = canvas.width/15;
+    var ypersonaje = canvas.height/1.9;
+    
+    var personaje2;
+    var framePersonaje2 = 0;
+    var xpersonaje2 = canvas.width/15;
+    var ypersonaje2 = canvas.height/1.9;
+    var quieto = false;
+    var stop = 0;
+    var caminar = 0;
+    
+    var enemigo1;
+    var xenemigo1 = canvas.width/20;
+    var yenemigo1 = canvas.height/3;
+    
+    var enemigo2;
+    var xenemigo2 = canvas.width/2.30;
+    var yenemigo2 = canvas.height/1;
+    
+    var enemigo3;
+    var xenemigo3 = canvas.width/1.15;
+    var yenemigo3 = canvas.height/5;
+    
+    var enemigo4;
+    var xenemigo4 = canvas.width/1.90;
+    var yenemigo4 = canvas.height/3;
+    
+    var right = false;
+    var left = false;
+    var distY = 0;
+    var distX = 0;
+    var grados = 0;
+    var frame = 1;
+    var velX = 10;
+    
+    personaje = new Image();
+    personaje.src = "img/daichi1.png";
+    
+    
+    personaje2 = new Image();
+    personaje2.src = "img/quieto.png";
+    
+    enemigo1 = new Image();
+    enemigo1.src = "img/enemigo1.png";
+    
+    enemigo2 = new Image();
+    enemigo2.src = "img/enemigo1.png";
+    
+    enemigo3 = new Image();
+    enemigo3.src = "img/enemigo1.png";
+    
+    enemigo4 = new Image();
+    enemigo4.src = "img/enemigo1.png";
+    
+    luna = new Image();
+    luna.src = "img/luna2.png";
+    
+    fondo2 = new Image();
+    fondo2.src = "img/fondo4.png";
+    
+      $("#izquierda").on('touchstart', function(e) {
+        log.value = "izquierda"; 
+          xpersonaje -= 30;
+        });
+  
+      $("#derecha").on('touchstart', function(e){        
+       log.value = "derecha";
+          xpersonaje += 30;
+       });
+    
+      $("#izquierda").on('touchend', function(e) {
+        log.value = "solto-izquierda";
+           xpersonaje -= 10;
+        });
+  
+      $("#derecha").on('touchend', function(e){        
+         log.value = "solto-derecha";
+           xpersonaje += 10;
+      });
+    
+    
+    window.addEventListener('keydown', function(e){
+        
+                    if (e.keyCode == 39){
+                        right = true;
+                        stop = 1;
+                        caminar = 0;
+                       
+                    }
+                    if (e.keyCode == 37){
+                        left = true;
+                        xpersonaje -=10;
+                        xpersonaje2 -=10;
+                    }
+    });
+    
+   window.addEventListener('keyup', function(e) {
+                    if (e.keyCode == 39) 
+                    {
+                        right = false;
+                        xpersonaje +=30;
+                        xpersonaje2 +=30;
+                        xfondo2 -=5;
+                        stop = 0;
+                        caminar = 1;
+                    }
+                    
+                 if (e.keyCode == 37) 
+                    {
+                        left = false;
+                    }
+       
+                });
+    //animamos la figura---------------------
+    function animation(){ 
+        
+                    if(xpersonaje < 1) 
+                    {
+                        xpersonaje = 0;
+                    }
+                    
+                    var limite = canvas.width + personaje.width;
+                    
+                    var limite2 = 0;
+                    
+                    if(xpersonaje >limite){xpersonaje = 0;}
+                    if(xpersonaje >1151){xpersonaje = 0;}
+					
+        framePersonaje++;
+        framePersonaje2++;
+        
+//        if (framePersonaje2 >= 6){framePersonaje2 = 0;}
+        if (framePersonaje >= 5){framePersonaje = 0;}
+        
+        yenemigo1 += 30;
+        yenemigo2 += 30;
+        yenemigo3 += 30;
+        yenemigo4 += 30;
+        xfondo2 -=2;
+        xpersonaje -=1;
+        xpersonaje2 -=1;
+        
+        redraw();
+        
+        setTimeout(animation, 1000 / 10);
+    }
+    
+   
+    //dibujamos la figura-----------------------------  
+   function redraw(){ 
+
+//dibujar imagenes;
+       
+     window.requestAnimationFrame(redraw, canvas);
+       
+     ctx.clearRect(0,0,canvas.width, canvas.height);3
+       
+     ctx.drawImage(luna, 0, 0,100,102, xluna, yluna,100,102);
+     ctx.drawImage(fondo2, 0, 0,6015,314, xfondo2, yfondo2,6015,314);
+       
+     ctx.drawImage(personaje,framePersonaje * 78,0,64,63, xpersonaje, ypersonaje,64,63);
+//     ctx.drawImage(personaje2,framePersonaje2 * 78,0,59,64, xpersonaje2, ypersonaje2,59,64);
+
+       
+     ctx.drawImage(enemigo1, 0, 0,50,50, xenemigo1, yenemigo1,50,50);
+     if(yenemigo1 - enemigo1.height  > 500){yenemigo1 = -500;} 
+       
+     ctx.drawImage(enemigo2, 0, 0,50,50, xenemigo2, yenemigo2,50,50);
+     if(yenemigo2 - enemigo2.height  > 500){yenemigo2 = -500;} 
+       
+     ctx.drawImage(enemigo3, 0, 0,50,50, xenemigo3, yenemigo3,50,50);
+     if(yenemigo3 - enemigo3.height  > 500){yenemigo3 = -500;} 
+       
+     ctx.drawImage(enemigo4, 0, 0,50,50, xenemigo4, yenemigo4,50,50);
+     if(yenemigo4 - enemigo4.height  > 500){yenemigo4 = -500;} 
+    
+//conmandos del taclado;
+    if(right) {
+    xpersonaje -= distY;
+    ypersonaje -= distX;
+    }
+       
+    if(quieto == true){
+    }else{
+        right = false;
+    }
+       
+       if(stop == 1){
+           if (framePersonaje >= 5){framePersonaje = 0;}
+        }
+       
+       if(caminar == 1){
+           if (framePersonaje2 >= 6){framePersonaje2 = 0;}
+       }
+       
+    if (left){
+    xpersonaje += distY;
+    ypersonaje += distX;
+    }
+       
+   }
+    animation();
+}//function glo;
+        
+    </script>
+    
+<!--
+{
+                    
+                Ave1Img = boomImg;
+                    console.log("cambio");
+                    animate = true;
+                    tiempo2 = 0;
+            }
+                    
+            if (animate == true){
+                 yAve +=5;
+                tiempo2++;
+                }
+                    
+            if(tiempo2 == 10)
+                {
+                animate = false;
+//                boomImg = Ave1Img;
+                }
+-->
+    
+
+<body>
+    <canvas id="canvas" width="1151" height="314"></canvas>
+    <div    id="fondo2" width="1151" height="314"></div>
+    
+    
+       <button class="boton" id="izquierda">izquierda</button>
+       <button class="boton" id="derecha">derecha</button>
+
+    
+      <textarea id="log"></textarea>
+</body>
+</html>
